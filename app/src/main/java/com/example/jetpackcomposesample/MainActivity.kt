@@ -4,17 +4,17 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -69,26 +69,43 @@ class MainActivity : ComponentActivity() {
                 .fillMaxWidth()
         ) {
 
-            Column {
+            var isExpanded by remember { mutableStateOf(false) }
+            val surfaceColor: Color by animateColorAsState(
+                if (isExpanded) Color.DarkGray else Color.White
+            )
+            Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
                 Text(
                     text = news.title,
                     color = Color.Gray,
                     style = MaterialTheme.typography.h5
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = news.description,
-                    color = Color.LightGray,
-                    style = MaterialTheme.typography.subtitle1
-                )
+                androidx.compose.material.Surface(
+                    shape = MaterialTheme.shapes.medium,
+                    elevation = 1.dp,
+                    color = surfaceColor,
+                    modifier = Modifier
+                        .animateContentSize()
+                        .padding(1.dp)
+                ) {
+                    Text(
+                        text = news.description,
+                        modifier = Modifier.padding(all = 4.dp).width(64.dp),
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                        style = MaterialTheme.typography.body2
+                    )
+                }
             }
             Spacer(modifier = Modifier.width(8.dp))
+
+
+            val imageSize = if (isExpanded) 100.dp else 40.dp
 
             Image(
                 painter = painterResource(R.drawable.ic_launcher_background),
                 contentDescription = "News icon",
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(imageSize)
                     .clip(RectangleShape)
                     .border(2.dp, Color.DarkGray, RectangleShape)
                     .align(Alignment.CenterEnd)
