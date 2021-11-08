@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jetpackcomposesample.data.News
+import com.example.jetpackcomposesample.data.news
 import com.example.jetpackcomposesample.ui.theme.JetpackComposeSampleTheme
 
 class MainActivity : ComponentActivity() {
@@ -30,24 +32,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetpackComposeSampleTheme {
-                NewsList()
+                NewsList(news)
             }
         }
     }
 
 
     @Composable
-    fun NewsList() {
-        val scrollState = rememberLazyListState()
-        LazyColumn(state = scrollState) {
-            items(50) {
-                NewsCard(News(
-                    title = "Jetpack Compose",
-                    description = "It's composable function"
-                ))
+    fun NewsList(news: List<News>) {
+        LazyColumn {
+            items(news) { newsItem ->
+                NewsCard(newsItem)
             }
         }
     }
+
     @Composable
     fun NewsCard(news: News) {
         //Column fun lets you arrange elements vertically
