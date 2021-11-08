@@ -14,7 +14,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Text(text = "Hello world!")
+            MessageText(message = "Hello Android!")
         }
+    }
+    
+    @Composable
+    fun MessageText(message: String) {
+        Text(text = "Message text: $message")
     }
 }
